@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Omnitrix Database</title>
+    <!-- Google Fonts & Material Symbols -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" />
+    <link rel="stylesheet" href="~/css/styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- Clean Omnitrix Navigation -->
+    <nav class="omni-nav">
+        <div class="omni-nav-content">
+            <a class="nav-brand" asp-controller="Home" asp-action="Index">
+                <div class="nav-logo-emblem"></div>
+                <div class="nav-brand-text">
+                    <span class="nav-brand-title">OMNITRIX DB</span>
+                    <span class="nav-brand-sub">Episodes Portal</span>
+                </div>
+            </a>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" type="button">
+                <span>☰</span>
+            </button>
+
+            <div class="nav-links" id="nav-links">
+                <a class="nav-link" asp-controller="Home" asp-action="Index">Universes</a>
+                <a class="nav-link" href="https://benn-10.onrender.com/" target="_blank" rel="noopener noreferrer">
+                    Main Site ↗
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    @RenderBody()
+
+    <!-- Clean Footer -->
+    <footer class="omni-footer">
+        <div class="footer-content">
+            <div class="footer-copy">
+                &copy; 2026 Omnitrix Database &bull; Powered by TeraBox
+            </div>
+            <div class="footer-links">
+                <a class="footer-link" asp-controller="Home" asp-action="Index">Universes</a>
+                <a class="footer-link" href="https://benn-10.onrender.com/" target="_blank" rel="noopener noreferrer">Main Website</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Cursor & Watch Scripts -->
+    <script src="~/js/cursor.js" asp-append-version="true"></script>
+    <script src="~/js/watch.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

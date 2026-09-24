@@ -1,0 +1,113 @@
+@model Ben10Videos.Models.WatchViewModel
+@{
+    ViewData["Title"] = $"{Model.CurrentUniverse.Name} - {Model.CurrentSeason.Title}";
+}
+
+<div class="watch-container">
+    
+    <!-- Clean Header: Back Button & Universe Title -->
+    <div class="universe-page-header">
+        <a href="/" class="back-btn">
+            <span>← Back to Universes</span>
+        </a>
+        <h1 class="universe-title">@Model.CurrentUniverse.Name</h1>
+    </div>
+
+    <!-- Season Selector & Quick Search -->
+    <div class="season-search-row">
+        <div class="season-pills">
+            @foreach (var s in Model.CurrentUniverse.Seasons)
+            {
+                var isSeasonActive = s.SeasonNumber == Model.CurrentSeason.SeasonNumber && string.IsNullOrEmpty(Model.SearchQuery);
+                <a href="/Watch?universe=@Model.CurrentUniverse.Id&season=@s.SeasonNumber" 
+                   class="season-pill @(isSeasonActive ? "active" : "")">
+                    <span>@s.Title</span>
+                </a>
+            }
+        </div>
+
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="episode-search" class="search-input" 
+                   placeholder="Search episode or alien..." 
+                   value="@Model.SearchQuery" autocomplete="off" />
+        </div>
+    </div>
+
+    <!-- Clean Episodes Grid -->
+    <div class="episodes-grid" id="episodes-grid">
+        @foreach (var ep in Model.DisplayEpisodes)
+        {
+            var isMovie = ep.Duration.Contains("44") || ep.Duration.Contains("69") || ep.Title.Contains("Movie") || ep.Title.Contains("Ben 10,010");
+            <div class="episode-card @(isMovie ? "movie-card" : "")" 
+                 data-title="@ep.Title" 
+                 data-ep="Episode @ep.EpisodeNumber" 
+                 data-desc="@ep.Description" 
+                 data-aliens="@ep.FeaturedAliens">
+
+                <div class="episode-thumb">
+                    <!-- High-Tech Cyber Grid & Hologram Rings -->
+                    <div class="thumb-cyber-grid"></div>
+                    <div class="thumb-radar-ring"></div>
+                    <div class="thumb-radar-ring-inner"></div>
+
+                    @if (isMovie)
+                    {
+                        <span class="ep-tag ep-tag-movie">🎬 MOVIE SPECIAL</span>
+                    }
+                    else
+                    {
+                        <span class="ep-tag">Episode @ep.EpisodeNumber</span>
+                    }
+
+                    <span class="ep-quality-tag">1080p HD</span>
+
+                    <!-- Interactive Center Play Button -->
+                    <div class="episode-center-interactive">
+                        <div class="omni-stream-core">
+                            <span class="stream-play-icon">▶</span>
+                        </div>
+                    </div>
+
+                    <div class="stream-bottom-bar">
+                        <div class="stream-progress-track">
+                            <div class="stream-progress-fill"></div>
+                        </div>
+                        <span class="ep-duration">⏱ @ep.Duration</span>
+                    </div>
+                </div>
+
+                <div class="episode-body">
+                    <div class="episode-title">@ep.EpisodeNumber. @ep.Title</div>
+
+                    @if (!string.IsNullOrWhiteSpace(ep.FeaturedAliens))
+                    {
+                        <div class="alien-tag-row">
+                            <span class="alien-icon">🧬</span>
+                            <span class="alien-names">@ep.FeaturedAliens</span>
+                        </div>
+                    }
+
+                    <p class="episode-desc">@ep.Description</p>
+
+                    <!-- Single Direct Button: Watch on TeraBox -->
+                    <a href="@ep.TeraBoxUrl" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="btn-terabox">
+                        <span>Watch on TeraBox ↗</span>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Empty Search State -->
+    <div id="search-empty-state" class="empty-state" style="display: none;">
+        <h3>No matching episodes found</h3>
+        <p style="color: var(--text-dim); margin-top: 0.5rem;">
+            Try checking spelling or search for another keyword.
+        </p>
+    </div>
+
+</div>

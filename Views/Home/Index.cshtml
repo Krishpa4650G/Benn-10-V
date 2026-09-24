@@ -1,0 +1,33 @@
+@model List<Ben10Videos.Models.Universe>
+@{
+    ViewData["Title"] = "Omnitrix Database | Select Universe";
+}
+
+<div class="landing-container">
+    <div class="omnitrix-logo-large"></div>
+
+    <h1>OMNITRIX DATABASE</h1>
+    <p class="subtitle">
+        Select a universe to explore seasons and watch episodes on TeraBox.
+    </p>
+
+    <!-- Universe Selection Grid -->
+    <div class="series-selection">
+        @foreach (var u in Model)
+        {
+            <a href="/Watch?universe=@u.Id" class="series-card @u.PosterClass">
+                <div class="card-bg"></div>
+                <div class="card-top">
+                    <h2>@u.Name</h2>
+                    <p>@u.Tagline</p>
+                </div>
+                <div class="card-footer-info">
+                    <span class="ep-stat">
+                        @u.Seasons.Count Seasons &bull; @u.Seasons.Sum(s => s.Episodes.Count) Episodes
+                    </span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </a>
+        }
+    </div>
+</div>

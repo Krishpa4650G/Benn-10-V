@@ -1,0 +1,83 @@
+@model Ben10Videos.Models.Episode
+@{
+    var universe = ViewBag.Universe as Ben10Videos.Models.Universe;
+    ViewData["Title"] = $"Transferring: {Model.Title} - TeraBox";
+}
+
+<div class="watch-container">
+    <div class="transfer-container">
+        <!-- Glowing Omnitrix Radar Pulse -->
+        <div class="transfer-pulse-ring">
+            <div class="episode-symbol" style="width: 50px; height: 50px;"></div>
+        </div>
+
+        <div class="hero-badge">
+            <span>⚡ Sub-Space Gateway Active</span>
+        </div>
+
+        <h1 class="transfer-title">TRANSFERRING TO TERABOX</h1>
+        <p class="transfer-subtitle">
+            Establishing secure high-speed connection to the Galvan video transmission server...
+        </p>
+
+        <!-- Episode Overview Card -->
+        <div class="transfer-ep-card">
+            <div class="transfer-ep-badge">
+                @(universe?.Name ?? "Ben 10") &bull; Season @Model.SeasonNumber Episode @Model.EpisodeNumber
+            </div>
+            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; margin-bottom: 0.5rem; color: #fff;">
+                @Model.Title
+            </h2>
+            <p style="color: var(--text-dim); font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.8rem;">
+                @Model.Description
+            </p>
+            <div style="display: flex; gap: 1rem; color: var(--primary-neon); font-size: 0.85rem;">
+                <span>⏱ Duration: @Model.Duration</span>
+                @if (!string.IsNullOrEmpty(Model.FeaturedAliens))
+                {
+                    <span>🧬 Aliens: @Model.FeaturedAliens</span>
+                }
+            </div>
+        </div>
+
+        <!-- Animated Countdown Bar -->
+        <div class="countdown-bar">
+            <div class="countdown-fill" id="countdown-fill"></div>
+        </div>
+
+        <div id="transfer-status" style="color: var(--text-dim); font-size: 0.95rem; margin-bottom: 2rem;">
+            Redirecting in <span id="countdown-sec" style="color: var(--primary-neon); font-weight: 700; font-size: 1.2rem;">3</span> seconds...
+        </div>
+
+        <!-- Direct Action Buttons -->
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="@Model.TeraBoxUrl" id="manual-transfer-btn" target="_blank" rel="noopener noreferrer" class="btn-terabox" style="padding: 1rem 2.5rem; font-size: 1.05rem;">
+                <span>🚀 Open in TeraBox Now</span>
+            </a>
+            <a href="/Watch?universe=@Model.UniverseId&season=@Model.SeasonNumber" class="nav-cta" style="padding: 1rem 1.8rem;">
+                <span>← Back to Episodes</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const targetUrl = "@Html.Raw(Model.TeraBoxUrl)";
+        let seconds = 3;
+        const countdownEl = document.getElementById('countdown-sec');
+        const statusEl = document.getElementById('transfer-status');
+
+        const interval = setInterval(() => {
+            seconds--;
+            if (countdownEl) countdownEl.innerText = seconds;
+
+            if (seconds <= 0) {
+                clearInterval(interval);
+                if (statusEl) statusEl.innerHTML = '<span style="color: var(--primary-neon);">Transfer initiated! If your browser blocked popups, click the button above.</span>';
+                // Open TeraBox in new tab or navigate
+                window.open(targetUrl, '_blank');
+            }
+        }, 1000);
+    </script>
+}

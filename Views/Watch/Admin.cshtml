@@ -1,0 +1,146 @@
+@model List<Ben10Videos.Models.Universe>
+@{
+    ViewData["Title"] = "Omnitrix Link Manager & Configurator";
+}
+
+<div class="watch-container">
+    <div style="margin-bottom: 2.5rem; text-align: center;">
+        <div class="hero-badge">
+            <span>⚙ Omnitrix Archive Manager</span>
+        </div>
+        <h1>TERABOX LINK CONFIGURATOR</h1>
+        <p class="subtitle" style="margin: 0 auto;">
+            Easily update, replace, and paste your TeraBox links for every Ben 10 Universe and Episode. All changes save directly to the system.
+        </p>
+    </div>
+
+    <!-- Universe Filter Tabs -->
+    <div class="universe-tabs-wrapper" style="margin-bottom: 2rem;">
+        <div class="universe-tabs" id="admin-universe-tabs">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var u = Model[i];
+                <button type="button" 
+                        class="universe-tab @(i == 0 ? "active" : "")" 
+                        onclick="showAdminUniverse('@u.Id', this)">
+                    <span class="tab-dot" style="color: @u.AccentColor;"></span>
+                    <span>@u.Name</span>
+                </button>
+            }
+        </div>
+    </div>
+
+    <!-- Episode Tables per Universe -->
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        var u = Model[i];
+        <div class="admin-universe-section" id="admin-sec-@u.Id" style="@(i > 0 ? "display: none;" : "")">
+            @foreach (var s in u.Seasons)
+            {
+                <div style="background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.8rem;">
+                        <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; color: #fff;">
+                            @u.Name &bull; @s.Title (@s.Episodes.Count Episodes)
+                        </h3>
+                        <span class="card-badge">@s.ReleaseYear</span>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        @foreach (var ep in s.Episodes)
+                        {
+                            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; background: rgba(0,0,0,0.3); padding: 0.9rem 1.2rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05);">
+                                <div style="min-width: min(100%, 220px); flex: 1;">
+                                    <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">
+                                        S@(ep.SeasonNumber.ToString("D2"))E@(ep.EpisodeNumber.ToString("D2")): @ep.Title
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: var(--text-dim);">
+                                        ID: <code style="color: var(--primary-neon);">@ep.Id</code> &bull; Duration: @ep.Duration
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 0.8rem; flex: 2; min-width: min(100%, 260px); width: 100%;">
+                                    <input type="url" 
+                                           id="input-@ep.Id" 
+                                           class="form-control" 
+                                           value="@ep.TeraBoxUrl" 
+                                           placeholder="https://terabox.com/s/..." 
+                                           style="padding: 0.5rem 0.9rem; font-size: 0.88rem;" />
+                                    
+                                    <button type="button" 
+                                            class="nav-cta" 
+                                            onclick="saveAdminLink('@ep.Id')" 
+                                            id="btn-save-@ep.Id"
+                                            style="padding: 0.5rem 1.2rem; white-space: nowrap; font-size: 0.82rem;">
+                                        <span>Save</span>
+                                    </button>
+
+                                    <a href="@ep.TeraBoxUrl" 
+                                       target="_blank" 
+                                       id="test-link-@ep.Id"
+                                       class="btn-icon-action" 
+                                       title="Test TeraBox Link" 
+                                       style="width: 36px; height: 36px;">
+                                        <span>↗</span>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function showAdminUniverse(uId, btn) {
+            document.querySelectorAll('.admin-universe-section').forEach(el => el.style.display = 'none');
+            const target = document.getElementById('admin-sec-' + uId);
+            if (target) target.style.display = 'block';
+
+            document.querySelectorAll('#admin-universe-tabs .universe-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        async function saveAdminLink(episodeId) {
+            const input = document.getElementById('input-' + episodeId);
+            const saveBtn = document.getElementById('btn-save-' + episodeId);
+            const testLink = document.getElementById('test-link-' + episodeId);
+            const newUrl = input.value.trim();
+
+            if (!newUrl) {
+                alert('Please enter a valid link.');
+                return;
+            }
+
+            saveBtn.innerHTML = '<span>Saving...</span>';
+
+            try {
+                const res = await fetch('/Watch/UpdateLink', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ episodeId, teraBoxUrl: newUrl })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    saveBtn.innerHTML = '<span style="color:#000;">✓ Saved</span>';
+                    saveBtn.style.background = '#00ff41';
+                    if (testLink) testLink.href = newUrl;
+                    showToast('Link for ' + episodeId + ' updated successfully!');
+                    setTimeout(() => {
+                        saveBtn.innerHTML = '<span>Save</span>';
+                        saveBtn.style.background = '';
+                    }, 2000);
+                } else {
+                    alert(data.message || 'Error updating link.');
+                    saveBtn.innerHTML = '<span>Save</span>';
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
+                saveBtn.innerHTML = '<span>Save</span>';
+            }
+        }
+    </script>
+}

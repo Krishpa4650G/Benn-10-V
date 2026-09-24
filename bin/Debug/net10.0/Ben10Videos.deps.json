@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "Ben10Videos/1.0.0": {
+        "runtime": {
+          "Ben10Videos.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Ben10Videos/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -88,7 +88,7 @@ body::after {
 }
 
 /* =========================================
-   GLOBAL NAVIGATION BAR (Matches benn-10.onrender.com)
+   GLOBAL NAVIGATION BAR (Matches benn-10-t1z4.onrender.com)
    ========================================= */
 .omni-nav {
     position: sticky;
@@ -117,6 +117,22 @@ body::after {
     gap: 1rem;
     text-decoration: none;
     color: var(--text-main);
+}
+
+.nav-logo-img {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--primary-neon);
+    box-shadow: 0 0 15px var(--primary-glow);
+    flex-shrink: 0;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.nav-brand:hover .nav-logo-img {
+    transform: rotate(360deg) scale(1.08);
+    box-shadow: 0 0 25px var(--primary-neon);
 }
 
 .nav-logo-emblem {
@@ -1624,7 +1640,8 @@ h1 {
         gap: 0.7rem;
     }
 
-    .nav-logo-emblem {
+    .nav-logo-emblem,
+    .nav-logo-img {
         width: 34px;
         height: 34px;
     }

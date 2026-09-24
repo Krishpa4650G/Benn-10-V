@@ -1,6 +1,6 @@
 # ⚡ Ben 10 Video Transmission Portal (ASP.NET Core MVC)
 
-A dedicated, high-tech video streaming & download portal for the Ben 10 Multiverse, matching the exact dark sci-fi aesthetic, neon green glow, and Omnitrix branding of your main website ([https://benn-10.onrender.com/](https://benn-10.onrender.com/)).
+A dedicated, high-tech video streaming & download portal for the Ben 10 Multiverse, matching the exact dark sci-fi aesthetic, neon green glow, and Omnitrix branding of your main website ([https://benn-10-t1z4.onrender.com/](https://benn-10-t1z4.onrender.com/)).
 
 ---
 
@@ -44,7 +44,7 @@ Then open your browser to the URL shown (e.g., `http://localhost:5055` or `http:
 
 ---
 
-## 🔗 How to Add the Button to Your Main Website (`https://benn-10.onrender.com/`)
+## 🔗 How to Add the Button to Your Main Website (`https://benn-10-t1z4.onrender.com/`)
 
 Whenever you are ready to link your main site to this video website, you can add this button:
 

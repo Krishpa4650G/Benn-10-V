@@ -46,8 +46,9 @@
                  data-aliens="@ep.FeaturedAliens">
 
                 <div class="episode-thumb">
-                    <!-- High-Tech Cyber Grid & Hologram Rings -->
-                    <div class="thumb-cyber-grid"></div>
+                    <!-- Ambient Beacon & Hologram Rings (No Square Boxes) -->
+                    <div class="thumb-ambient-glow"></div>
+                    <div class="thumb-horizon-beam"></div>
                     <div class="thumb-radar-ring"></div>
                     <div class="thumb-radar-ring-inner"></div>
 
@@ -88,7 +89,12 @@
                         </div>
                     }
 
-                    <p class="episode-desc">@ep.Description</p>
+                    @{
+                        var cleanDesc = ep.Description?.Replace(". Stream or download full episode in HD on TeraBox.", ".")
+                                                       .Replace("Stream or download full episode in HD on TeraBox.", "")
+                                                       .Trim();
+                    }
+                    <p class="episode-desc">@cleanDesc</p>
 
                     <!-- Single Direct Button: Watch on TeraBox -->
                     <a href="@ep.TeraBoxUrl" 
